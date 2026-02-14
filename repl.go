@@ -5,23 +5,35 @@ import (
 	"bufio"
 	"os"
 	"strings"
+	"github.com/tnaums/proteindex/internal/proteinapi"	
 )
 
-func startRepl() {
+type config struct {
+	proteinapiClient    proteinapi.Client
+	nextLocationsURL *string
+	prevLocationsURL *string
+}
+
+
+func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for ;; {
 		fmt.Print("Proteindex > ")
 		scanner.Scan()
 		input := scanner.Text()
-		cleaned := cleanInput(input)
-		if len(cleaned) == 0 {
+		words := cleanInput(input)
+		if len(words) == 0 {
 			continue
 		}
-		commandName := cleaned[0]
+		commandName := words[0]
+		args := []string{}
+		if len(words) > 1 {
+			args = words[1:]
+		}		
 
 		command, exists := getCommands()[commandName]
 		if exists {
-			err := command.callback()
+			err := command.callback(cfg, args...)			
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -38,15 +50,15 @@ func startRepl() {
 // from the input string. Used to clean and parse repl
 // input.
 func cleanInput(text string) []string {
-	lowered := strings.ToLower(text)
-	words := strings.Fields(lowered)
+	//	lowered := strings.ToLower(text)
+	words := strings.Fields(text)
 	return words
 }
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config, ...string) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -60,6 +72,11 @@ func getCommands() map[string]cliCommand {
 			name:        "exit",
 			description: "Exit the Pokedex",
 			callback:    commandExit,
+		},
+		"submit": {
+			name: "submit <sequence>",
+			description: "Submit blastp query",
+			callback: commandSubmit,
 		},
 	}
 }
