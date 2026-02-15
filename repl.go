@@ -70,13 +70,18 @@ func getCommands() map[string]cliCommand {
 		},
 		"exit": {
 			name:        "exit",
-			description: "Exit the Pokedex",
+			description: "Exit the Proteindex",
 			callback:    commandExit,
 		},
 		"submit": {
 			name: "submit <sequence>",
 			description: "Submit blastp query",
 			callback: commandSubmit,
+		},
+		"check": {
+			name: "check <RID>",
+			description: "Check for blastp results",
+			callback: commandCheckRid,
 		},
 	}
 }

@@ -2,15 +2,13 @@ package proteinapi
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
-	"time"
 
 	"golang.org/x/net/html"
 )
 
-func(c *Client) SubmitBlast(query string) string {
+func(c *Client) SubmitBlast(query string) (string, error) {
 	params := BlastParams{
 		Cmd:      "Put",
 		Query:    query,
@@ -23,29 +21,27 @@ func(c *Client) SubmitBlast(query string) string {
 
 	url := fmt.Sprintf(baseURL+"?QUERY=%s&DATABASE=%s&PROGRAM=%s&CMD=%s&FORMAT_TYPE=%s", params.Query, params.Database, params.Program, params.Cmd, params.Format)
 
-	client := &http.Client{
-		Timeout: time.Second * 10,
-	}
-
 	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
-	resp, err := client.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		fmt.Println("Error getting response")
+		//		fmt.Println("Error getting response")
+		return "", err
 	}
 
 	doc, err := html.Parse(resp.Body)
 	if err != nil {
-		fmt.Println("Error parsing HTML:", err)
+		//		fmt.Println("Error parsing HTML:", err)
+		return "", err
 	}
 
 	rid := extractRid(doc)
 	c.cache.AddRid(query, rid)
 	c.cache.PrintRids()
-	return rid
+	return rid, nil
 }
 
 // Extract the RID value from the blast request HTML response.
@@ -55,7 +51,6 @@ func extractRid(n *html.Node) string {
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			if strings.HasPrefix(c.Data, "QBlast") {
 				parts := strings.Fields(c.Data)
-				fmt.Printf("In extractRid: %s\n", parts[3])
 				return parts[3]
 			}
 		}

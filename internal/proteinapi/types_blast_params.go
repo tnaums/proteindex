@@ -45,7 +45,7 @@ type Blastp struct {
 							Num       int     `json:"num"`
 							BitScore  float64 `json:"bit_score"`
 							Score     int     `json:"score"`
-							Evalue    int     `json:"evalue"`
+							Evalue    float64     `json:"evalue"`
 							Identity  int     `json:"identity"`
 							Positive  int     `json:"positive"`
 							QueryFrom int     `json:"query_from"`
