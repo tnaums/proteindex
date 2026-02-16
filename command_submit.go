@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/tnaums/proteindex/internal/dex"
 )
 
 func commandSubmit(cfg *config, args ...string) error {
@@ -9,11 +11,6 @@ func commandSubmit(cfg *config, args ...string) error {
 	query := args[1]
 	fmt.Printf("Submiting %s\n", protein)
 	fmt.Printf("Query is %s\n", query)
-
-	// if _, ok := cfg.proteinapiClient.Cache.Get(args[1]); ok {
-	// 	fmt.Println("blastp results already in cache")
-	// 	return nil
-	// }
 	
 	rid, err := cfg.proteinapiClient.SubmitBlast(protein, query)
 	if err != nil {
@@ -25,5 +22,21 @@ func commandSubmit(cfg *config, args ...string) error {
 	}
 	
 	err = cfg.proteinapiClient.CheckBlast(protein, query, rid)
+	if err != nil {
+		return err
+	}
+	proteinData, err := cfg.proteinapiClient.CatchProtein(protein)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Throwing a Pokeball at %s...\n", protein)
+	cfg.proteindex[protein] = dex.Protein{
+		Name:  protein,
+		Blast: proteinData,
+	}
+	fmt.Printf("Caught %s!\n", protein)
+	fmt.Printf("You have caught %d proteins.\n", len(cfg.proteindex))
+	
 	return nil
 }

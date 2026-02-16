@@ -83,10 +83,16 @@ func getCommands() map[string]cliCommand {
 			description: "Add blastp to ProteinDex",
 			callback: commandCatch,
 		},
-		// "check": {
-		// 	name: "check <RID>",
-		// 	description: "Check for blastp results",
-		// 	callback: commandCheckRid,
-		// },
+		"proteindex": {
+			name: "proteindex",
+			description: "list all captured proteins in proteindex",
+			callback: commandProteindex,
+		},
+		"inspect": {
+			name: "inspect",
+			description: "inspect blastp results from the proteindex",
+			callback: commandInspect,
+		},
+
 	}
 }

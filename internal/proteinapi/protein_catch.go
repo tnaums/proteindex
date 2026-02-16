@@ -3,14 +3,14 @@ package proteinapi
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
+	//	"fmt"
 )
 
 // Catch Protein
 func (c *Client) CatchProtein(name string) (Blastp, error){
 
 	if val, ok := c.cache.Get(name); ok {
-		fmt.Printf("%s\n\n", val)
+		//		fmt.Printf("%s\n\n", val)
 		proteinData := Blastp{}
 		err := json.Unmarshal(val, &proteinData)
 		if err != nil {

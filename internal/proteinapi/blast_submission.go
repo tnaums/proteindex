@@ -8,9 +8,9 @@ import (
 	"golang.org/x/net/html"
 )
 
-func (c *Client) SubmitBlast(name, query string) (string, error) {
+func (c *Client) SubmitBlast(protein, query string) (string, error) {
 
-	if _, ok := c.cache.Get(query); ok {
+	if _, ok := c.cache.Get(protein); ok {
 		//		fmt.Println("blastp results already in cache")
 		return "foundit", nil
 	}
@@ -45,7 +45,7 @@ func (c *Client) SubmitBlast(name, query string) (string, error) {
 	}
 
 	rid := extractRid(doc)
-	c.cache.AddRid(query, rid)
+	c.cache.AddRid(protein, rid)
 	c.cache.PrintRids()
 	return rid, nil
 }
