@@ -5,13 +5,13 @@ import (
 	"bufio"
 	"os"
 	"strings"
-	"github.com/tnaums/proteindex/internal/proteinapi"	
+	"github.com/tnaums/proteindex/internal/proteinapi"
+	"github.com/tnaums/proteindex/internal/dex"
 )
 
 type config struct {
 	proteinapiClient    proteinapi.Client
-	nextLocationsURL *string
-	prevLocationsURL *string
+	proteindex map[string]dex.Protein
 }
 
 
@@ -73,15 +73,20 @@ func getCommands() map[string]cliCommand {
 			description: "Exit the Proteindex",
 			callback:    commandExit,
 		},
-		"submit": {
-			name: "submit <sequence>",
+		"blastp": {
+			name: "blastp <name> <sequence>",
 			description: "Submit blastp query",
 			callback: commandSubmit,
 		},
-		"check": {
-			name: "check <RID>",
-			description: "Check for blastp results",
-			callback: commandCheckRid,
+		"catch": {
+			name: "catch <name>",
+			description: "Add blastp to ProteinDex",
+			callback: commandCatch,
 		},
+		// "check": {
+		// 	name: "check <RID>",
+		// 	description: "Check for blastp results",
+		// 	callback: commandCheckRid,
+		// },
 	}
 }

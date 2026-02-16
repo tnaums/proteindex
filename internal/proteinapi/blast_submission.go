@@ -8,7 +8,13 @@ import (
 	"golang.org/x/net/html"
 )
 
-func(c *Client) SubmitBlast(query string) (string, error) {
+func (c *Client) SubmitBlast(name, query string) (string, error) {
+
+	if _, ok := c.cache.Get(query); ok {
+		//		fmt.Println("blastp results already in cache")
+		return "foundit", nil
+	}
+
 	params := BlastParams{
 		Cmd:      "Put",
 		Query:    query,

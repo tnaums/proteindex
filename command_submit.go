@@ -5,13 +5,25 @@ import (
 )
 
 func commandSubmit(cfg *config, args ...string) error {
-	fmt.Println("Submit the query")
-	fmt.Printf("Query is %s\n", args[0])
-	rid, err := cfg.proteinapiClient.SubmitBlast(args[0])
+	protein := args[0]
+	query := args[1]
+	fmt.Printf("Submiting %s\n", protein)
+	fmt.Printf("Query is %s\n", query)
+
+	// if _, ok := cfg.proteinapiClient.Cache.Get(args[1]); ok {
+	// 	fmt.Println("blastp results already in cache")
+	// 	return nil
+	// }
+	
+	rid, err := cfg.proteinapiClient.SubmitBlast(protein, query)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("commandSubmit_RID is: %s", rid)
-	fmt.Println()
+	if rid == "foundit" {
+ 	fmt.Println("blastp results already in cache")
+		return nil
+	}
+	
+	err = cfg.proteinapiClient.CheckBlast(protein, query, rid)
 	return nil
 }

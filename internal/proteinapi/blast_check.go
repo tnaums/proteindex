@@ -1,49 +1,49 @@
 package proteinapi
 
 import (
-	"encoding/json"
+	"bytes"
+	//	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
-func (c *Client) CheckBlast(rid string) (Blastp, error) {
+func (c *Client) CheckBlast(protein, query, rid string) error {
 	fmt.Printf("Retrieving rid %s...\n", rid)
 	baseURL := "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
-	blastResp := Blastp{}
+	//	blastResp := Blastp{}
 	url := fmt.Sprintf(baseURL+"?RID=%s&CMD=%s&FORMAT_TYPE=%s", rid, "GET", "JSON2_S")
 
-	if val, ok := c.cache.Get(url); ok {
-		fmt.Println("found cache entry!")
-		err := json.Unmarshal(val, &blastResp)
+	for {
+		fmt.Println("Waiting 20 seconds...")
+		duration := time.Duration(20) * time.Second
+		time.Sleep(duration)
+
+		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
-			return Blastp{}, err
+			return err
 		}
-		return blastResp, nil
-	}
 
-	
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return Blastp{}, err
-	}
+		resp, err := c.httpClient.Do(req)
+		if err != nil {
+			return err
+		}
+		defer resp.Body.Close()
 
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return Blastp{}, err
-	}
-	defer resp.Body.Close()
+		b, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
 
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return Blastp{}, err
-	}
+		prefix := []byte{'<', '!', 'D', 'O', 'C'}
+		if bytes.HasPrefix(b, prefix) {
+			fmt.Println("Results not yet available...")
+		} else {
+			c.cache.Add(protein, b)
+			fmt.Println("Added to cache!")
+			return nil
+		}
 
-	err = json.Unmarshal(b, &blastResp)
-	if err != nil {
-		return Blastp{}, err
 	}
-
-	c.cache.Add(url, b)
-	return blastResp, nil
 }
