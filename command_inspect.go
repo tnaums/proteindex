@@ -1,11 +1,15 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/tnaums/proteindex/internal/dex"
 )
 
 func commandInspect(cfg *config, args ...string) error {
+	if len(args) != 1 {
+		errors.New("Wrong number of arguments.\ninspect <name>")
+	}
 	protein := args[0]
 	p, ok := cfg.proteindex[protein]
 	if !ok {

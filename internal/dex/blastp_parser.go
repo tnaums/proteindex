@@ -34,8 +34,9 @@ func ParseBlastp(b Protein) {
 			printAlignment(hsp.Qseq, hsp.Hseq, hsp.Midline)
 
 		}
+		fmt.Println()
 		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("press Enter to continue: ")
+		fmt.Print("press Enter to continue: ")
 		for scanner.Scan() {
 			scanner.Text()
 			break
@@ -55,7 +56,7 @@ func printAlignment(q, h, m string) {
 			midline += string(m[0])
 			continue
 		}
-		if idx%70 == 0 {
+		if idx%80 == 0 {
 			fmt.Println()
 			fmt.Printf("    %s\n", query)
 			fmt.Printf("    %s\n", midline)

@@ -4,7 +4,7 @@ import "fmt"
 
 func commandHelp(cfg *config, args ...string) error {
 	fmt.Println()
-	fmt.Println("Welcome to the Proteindex!")
+	//	fmt.Println("Welcome to the Proteindex!")
 	fmt.Println("Usage:")
 	fmt.Println()
 	for _, cmd := range getCommands() {

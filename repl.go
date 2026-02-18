@@ -1,23 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"bufio"
+	"fmt"
+	"github.com/tnaums/proteindex/internal/dex"
+	"github.com/tnaums/proteindex/internal/proteinapi"
 	"os"
 	"strings"
-	"github.com/tnaums/proteindex/internal/proteinapi"
-	"github.com/tnaums/proteindex/internal/dex"
 )
 
 type config struct {
-	proteinapiClient    proteinapi.Client
-	proteindex map[string]dex.Protein
+	proteinapiClient proteinapi.Client
+	proteindex       map[string]dex.Protein
 }
-
 
 func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
-	for ;; {
+	fmt.Println("\nWelcome to the Proteindex! \ntype 'help' for a list of commands.\n")	
+	for {
+
 		fmt.Print("Proteindex > ")
 		scanner.Scan()
 		input := scanner.Text()
@@ -29,11 +30,11 @@ func startRepl(cfg *config) {
 		args := []string{}
 		if len(words) > 1 {
 			args = words[1:]
-		}		
+		}
 
 		command, exists := getCommands()[commandName]
 		if exists {
-			err := command.callback(cfg, args...)			
+			err := command.callback(cfg, args...)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -65,7 +66,7 @@ func getCommands() map[string]cliCommand {
 	return map[string]cliCommand{
 		"help": {
 			name:        "help",
-			description: "Displays a help message",
+			description: "Displays this help message",
 			callback:    commandHelp,
 		},
 		"exit": {
@@ -74,25 +75,19 @@ func getCommands() map[string]cliCommand {
 			callback:    commandExit,
 		},
 		"blastp": {
-			name: "blastp <name> <sequence>",
+			name:        "blastp <name> <sequence>",
 			description: "Submit blastp query",
-			callback: commandSubmit,
-		},
-		"catch": {
-			name: "catch <name>",
-			description: "Add blastp to ProteinDex",
-			callback: commandCatch,
+			callback:    commandSubmitGo,
 		},
 		"proteindex": {
-			name: "proteindex",
-			description: "list all captured proteins in proteindex",
-			callback: commandProteindex,
+			name:        "proteindex",
+			description: "List all captured proteins",
+			callback:    commandProteindex,
 		},
 		"inspect": {
-			name: "inspect",
-			description: "inspect blastp results from the proteindex",
-			callback: commandInspect,
+			name:        "inspect <protein>",
+			description: "Inspect blastp results for a captured protein",
+			callback:    commandInspect,
 		},
-
 	}
 }

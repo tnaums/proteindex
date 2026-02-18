@@ -34,19 +34,17 @@ func (c *Client) SubmitBlast(protein, query string) (string, error) {
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		//		fmt.Println("Error getting response")
 		return "", err
 	}
 
 	doc, err := html.Parse(resp.Body)
 	if err != nil {
-		//		fmt.Println("Error parsing HTML:", err)
 		return "", err
 	}
 
 	rid := extractRid(doc)
 	c.cache.AddRid(protein, rid)
-	c.cache.PrintRids()
+	//	c.cache.PrintRids()
 	return rid, nil
 }
 

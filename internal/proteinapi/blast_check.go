@@ -2,7 +2,6 @@ package proteinapi
 
 import (
 	"bytes"
-	//	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -10,13 +9,12 @@ import (
 )
 
 func (c *Client) CheckBlast(protein, query, rid string) error {
-	fmt.Printf("Retrieving rid %s...\n", rid)
+	fmt.Printf("\nRetrieving rid %s...\n", rid)
+	fmt.Print("Proteindex > ")	
 	baseURL := "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
-	//	blastResp := Blastp{}
 	url := fmt.Sprintf(baseURL+"?RID=%s&CMD=%s&FORMAT_TYPE=%s", rid, "GET", "JSON2_S")
 
 	for {
-		fmt.Println("Waiting 20 seconds...")
 		duration := time.Duration(20) * time.Second
 		time.Sleep(duration)
 
@@ -38,10 +36,9 @@ func (c *Client) CheckBlast(protein, query, rid string) error {
 
 		prefix := []byte{'<', '!', 'D', 'O', 'C'}
 		if bytes.HasPrefix(b, prefix) {
-			fmt.Println("Results not yet available...")
+			continue
 		} else {
 			c.cache.Add(protein, b)
-			fmt.Println("Added to cache!")
 			return nil
 		}
 

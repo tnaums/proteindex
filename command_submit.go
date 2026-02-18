@@ -9,12 +9,13 @@ import (
 func commandSubmit(cfg *config, args ...string) error {
 	protein := args[0]
 	query := args[1]
-	fmt.Printf("Submiting %s\n", protein)
-	fmt.Printf("Query is %s\n", query)
+	fmt.Printf("\nSubmiting %s\n", protein)
+	fmt.Printf("\nQuery is %s\n", query)
+	fmt.Print("Proteindex > ")	
 	
 	rid, err := cfg.proteinapiClient.SubmitBlast(protein, query)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 	if rid == "foundit" {
  	fmt.Println("blastp results already in cache")
@@ -30,13 +31,14 @@ func commandSubmit(cfg *config, args ...string) error {
 		return err
 	}
 
-	fmt.Printf("Throwing a Pokeball at %s...\n", protein)
+	fmt.Printf("\nThrowing a Pokeball at %s...\n", protein)
 	cfg.proteindex[protein] = dex.Protein{
 		Name:  protein,
 		Blast: proteinData,
 	}
 	fmt.Printf("Caught %s!\n", protein)
 	fmt.Printf("You have caught %d proteins.\n", len(cfg.proteindex))
+	fmt.Print("Proteindex > ")
 	
 	return nil
 }
