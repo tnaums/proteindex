@@ -3,6 +3,7 @@ package proteinapi
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -22,11 +23,19 @@ func (c *Client) SubmitBlast(protein, query string) (string, error) {
 		Program:  "blastp",
 		Format:   "JSON2",
 	}
-
-	baseURL := "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
-
-	url := fmt.Sprintf(baseURL+"?QUERY=%s&DATABASE=%s&PROGRAM=%s&CMD=%s&FORMAT_TYPE=%s", params.Query, params.Database, params.Program, params.Cmd, params.Format)
-
+	baseURL, _ := url.Parse("https://blast.ncbi.nlm.nih.gov/Blast.cgi")
+	//	baseURL := "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
+	paramsUrl := url.Values{}
+	paramsUrl.Add("QUERY", params.Query)
+	paramsUrl.Add("DATABASE", params.Database)
+	paramsUrl.Add("PROGRAM", params.Program)
+	paramsUrl.Add("CMD", params.Cmd)
+	paramsUrl.Add("FORMAT", params.Format)
+	baseURL.RawQuery = paramsUrl.Encode()
+	//fmt.Println(baseURL.String()) // Output: https://example.com?key=value
+	//	url := fmt.Sprintf(baseURL+"?QUERY=%s&DATABASE=%s&PROGRAM=%s&CMD=%s&FORMAT_TYPE=%s", params.Query, params.Database, params.Program, params.Cmd, params.Format)
+	url := baseURL.String()
+	fmt.Printf("url is: %s\n\n", url)
 	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
 		return "", err
@@ -43,7 +52,7 @@ func (c *Client) SubmitBlast(protein, query string) (string, error) {
 	}
 
 	rid := extractRid(doc)
-	c.cache.AddRid(protein, rid)
+	//	c.cache.AddRid(protein, rid)
 	//	c.cache.PrintRids()
 	return rid, nil
 }

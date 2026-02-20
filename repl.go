@@ -15,6 +15,7 @@ type config struct {
 }
 
 func startRepl(cfg *config) {
+
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("\nWelcome to the Proteindex! \ntype 'help' for a list of commands.\n")	
 	for {
@@ -78,6 +79,11 @@ func getCommands() map[string]cliCommand {
 			name:        "blastp <name> <sequence>",
 			description: "Submit blastp query",
 			callback:    commandSubmitGo,
+		},
+		"fblastp": {
+			name: "fblastp <name>",
+			description: "Submit blastp query for file",
+			callback: commandFileSubmitGo,
 		},
 		"proteindex": {
 			name:        "proteindex",
