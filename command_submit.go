@@ -10,7 +10,7 @@ func commandSubmit(cfg *config, args ...string) error {
 	protein := args[0]
 	query := args[1]
 	fmt.Printf("\nSubmiting %s\n", protein)
-	fmt.Printf("\nQuery is %s\n", query)
+	//	fmt.Printf("\nQuery is %s\n", query)
 	fmt.Print("Proteindex > ")	
 	
 	rid, err := cfg.proteinapiClient.SubmitBlast(protein, query)

@@ -1,7 +1,7 @@
 package proteinapi
 
 import (
-	"fmt"
+	//	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -32,10 +32,9 @@ func (c *Client) SubmitBlast(protein, query string) (string, error) {
 	paramsUrl.Add("CMD", params.Cmd)
 	paramsUrl.Add("FORMAT", params.Format)
 	baseURL.RawQuery = paramsUrl.Encode()
-	//fmt.Println(baseURL.String()) // Output: https://example.com?key=value
-	//	url := fmt.Sprintf(baseURL+"?QUERY=%s&DATABASE=%s&PROGRAM=%s&CMD=%s&FORMAT_TYPE=%s", params.Query, params.Database, params.Program, params.Cmd, params.Format)
+
 	url := baseURL.String()
-	fmt.Printf("url is: %s\n\n", url)
+	//	fmt.Printf("url is: %s\n\n", url)
 	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
 		return "", err

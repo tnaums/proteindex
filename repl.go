@@ -81,7 +81,7 @@ func getCommands() map[string]cliCommand {
 			callback:    commandSubmitGo,
 		},
 		"fblastp": {
-			name: "fblastp <name>",
+			name: "fblastp",
 			description: "Submit blastp query for file",
 			callback: commandFileSubmitGo,
 		},

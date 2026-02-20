@@ -13,24 +13,25 @@ func ParseBlastp(b Protein) {
 
 		for _, d := range hit.Description {
 			fmt.Println("Description:")
-			fmt.Printf("    ID: %s\n", d.ID)
-			fmt.Printf("    Accession: %s\n", d.Accession)
-			fmt.Printf("    Title: %s\n", d.Title)
-			fmt.Printf("    Taxid: %d\n", d.Taxid)
-			fmt.Printf("    %s\n", d.Sciname)
+			fmt.Printf("    ID:%s", d.ID)
+			fmt.Printf("  Accession:%s", d.Accession)
+			fmt.Printf("  Taxid:%d", d.Taxid)
+			fmt.Printf("  Sciname:%s\n", d.Sciname)
+			fmt.Printf("    Title:%s\n", d.Title)			
 		}
 		fmt.Printf("Length: %d\n", hit.Len)
 		for _, hsp := range hit.Hsps {
 			fmt.Printf("Hsp: %d\n", hsp.Num)
-			fmt.Printf("    Bitscore %e\n", hsp.BitScore)
-			fmt.Printf("    Score %d\n", hsp.Score)
-			fmt.Printf("    Evalue %f\n", hsp.Evalue)
-			fmt.Printf("    Identity %d\n", hsp.Identity)
-			fmt.Printf("    Posititve %d\n", hsp.Positive)
-			fmt.Printf("    Query %d -> %d\n", hsp.QueryFrom, hsp.QueryTo)
-			fmt.Printf("    Hit %d -> %d\n", hsp.HitFrom, hsp.HitTo)
-			fmt.Printf("    AlignLen %d\n", hsp.AlignLen)
-			fmt.Printf("    Gaps %d\n", hsp.Gaps)
+			fmt.Printf("    Bitscore=%e; ", hsp.BitScore)
+			fmt.Printf("Score=%d; ", hsp.Score)
+			fmt.Printf("Evalue=%f; ", hsp.Evalue)
+			fmt.Printf("Identity=%d; ", hsp.Identity)
+			fmt.Printf("Posititve=%d; ", hsp.Positive)
+			fmt.Printf("AlignLen=%d; ", hsp.AlignLen)
+			fmt.Printf("Gaps:%d\n", hsp.Gaps)			
+			fmt.Printf("    Query:%d -> %d\n", hsp.QueryFrom, hsp.QueryTo)
+			fmt.Printf("      Hit:%d -> %d\n", hsp.HitFrom, hsp.HitTo)
+
 			printAlignment(hsp.Qseq, hsp.Hseq, hsp.Midline)
 
 		}
