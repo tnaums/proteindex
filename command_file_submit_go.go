@@ -1,11 +1,21 @@
 package main
 
 import (
-	"io/ioutil"
+	"fmt"
+	"os"
 )
 
 func commandFileSubmitGo(cfg *config, args ...string) error {
-	data, err := ioutil.ReadFile("sequences/Afca.pep")
+	seqFile, err := os.ReadDir("sequences")
+	if err != nil {
+		return err
+	}
+	for idx, seq := range seqFile {
+		fmt.Printf(" %d. %s\n", idx + 1, seq.Name())
+	}
+
+	
+	data, err := os.ReadFile("sequences/" + seqFile[0].Name())
 	if err != nil {
 		return err
 	}
